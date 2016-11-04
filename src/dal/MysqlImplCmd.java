@@ -3,6 +3,7 @@ package dal;
 import java.sql.*;
 
 import businessObjects.Book;
+import logger.ErrorLogger;
 
 public abstract class MysqlImplCmd {
 
@@ -45,8 +46,17 @@ public abstract class MysqlImplCmd {
 	
 	public boolean connectDB()
 	{
-		Class.forName(DBConfig.getInstance().getDriver());
-		con = DriverManager.getConnection(DBConfig.getInstance().getUrl(),DBConfig.getInstance().getUsername(),DBConfig.getInstance().getPassword());
+		try
+		{
+			Class.forName(DBConfig.getInstance().getDriver());
+			con = DriverManager.getConnection(DBConfig.getInstance().getUrl(),DBConfig.getInstance().getUsername(),DBConfig.getInstance().getPassword());
+			return true;
+		}
+		catch(Exception ex)
+		{
+			ErrorLogger.log(ex.getMessage());
+			return false;
+		}
 	}
 	
 	public void disconnectDB()

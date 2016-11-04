@@ -11,7 +11,7 @@ public abstract class GetBook extends MysqlImplCmd{
 	
 	public Book getBook()
 	{
-		
+		return book;
 	}
 
 }

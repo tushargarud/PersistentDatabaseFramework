@@ -2,7 +2,7 @@ package dal;
 
 import businessObjects.Book;
 
-public abstract class MysqlImpl implements DBImpl {
+public class MysqlImpl implements DBImpl {
 	
 	public void savePrintbook(Book b)
 	{

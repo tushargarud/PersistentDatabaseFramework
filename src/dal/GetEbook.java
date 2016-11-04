@@ -4,6 +4,7 @@ import java.sql.*;
 
 import businessObjects.Book;
 import businessObjects.Ebook;
+import businessObjects.Printbook;
 import logger.ErrorLogger;
 
 public class GetEbook extends GetBook{
@@ -30,15 +31,20 @@ public class GetEbook extends GetBook{
 	
 	public Book processResult()
 	{
+
+		book = null;
+		
 		try
 		{
-			book = new Ebook(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5),resultSet.getInt(6),resultSet.getString(7));
-			return book;
+			if(resultSet.next())
+				book = new Ebook(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),resultSet.getString(5),resultSet.getInt(6),resultSet.getString(7));
 		}
 		catch(SQLException ex)
 		{
 			ErrorLogger.log(ex.getMessage());
-			return null;
 		}
+		
+		return book;
+		
 	}
 }
