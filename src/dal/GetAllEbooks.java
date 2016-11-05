@@ -24,6 +24,11 @@ public class GetAllEbooks extends GetAllBooks{
 		}
 	}
 	
+	public void undoQueryDB()
+	{
+		
+	}
+	
 	public Book processResult()
 	{
 

@@ -32,15 +32,41 @@ public abstract class MysqlImplCmd {
 			{
 				queryDB();
 				book = processResult();
-				disconnectDB();
 			}
-		}catch(Exception ex)
+		}
+		catch(Exception ex)
+		{
+			ErrorLogger.log(ex.getMessage());
+		}
+		finally
 		{
 			disconnectDB();
 		}
 	}
 	
+	public void undo()
+	{
+		try
+		{
+			if(connectDB())
+			{
+				undoQueryDB();
+				book = processResult();
+			}
+		}
+		catch(Exception ex)
+		{
+			ErrorLogger.log(ex.getMessage());
+		}
+		finally
+		{
+			disconnectDB();
+		}	
+	}
+	
 	public abstract void queryDB();
+	
+	public abstract void undoQueryDB();
 	
 	public abstract Book processResult();
 	

@@ -22,6 +22,11 @@ public class GetAllPrintbooks extends GetAllBooks{
 		}
 	}
 	
+	public void undoQueryDB()
+	{
+		
+	}
+	
 	public Book processResult()
 	{
 

@@ -8,10 +8,5 @@ public abstract class SaveBook extends MysqlImplCmd{
 	{
 		this.book = book;		
 	}
-	
-	public Book processResult()
-	{
-		return null;
-	}
 
 }

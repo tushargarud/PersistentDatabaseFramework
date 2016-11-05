@@ -9,9 +9,4 @@ public abstract class DeleteBook extends MysqlImplCmd{
 		this.id = id;	
 	}
 	
-	public Book processResult()
-	{
-		return null;
-	}
-
 }
