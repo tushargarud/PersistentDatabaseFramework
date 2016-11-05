@@ -31,7 +31,7 @@ public class TestController {
 			while(rs.next())  
 			{
 				Book book = new Book(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getInt(6));
-				ManageBooksForm manageBooksForm = new ManageBooksForm(book);
+				ManageBooksForm manageBooksForm = new ManageBooksForm();
 				manageBooksForm.setVisible(true);
 			}
 			rs.close();

@@ -6,4 +6,6 @@ public interface DBImpl {
 	public void saveEbook(Book b);
 	public Book getPrintbook(int id);
 	public Book getEbook(int id);
+	public void deletePrintbook(int id);
+	public void deleteEbook(int id);
 }

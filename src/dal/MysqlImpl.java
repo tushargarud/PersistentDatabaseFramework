@@ -12,7 +12,7 @@ public class MysqlImpl implements DBImpl {
 	
 	public void saveEbook(Book b)
 	{
-		SavePrintbook s = new SavePrintbook(b);
+		SaveEbook s = new SaveEbook(b);
 		s.execute();
 	}
 	
@@ -28,5 +28,17 @@ public class MysqlImpl implements DBImpl {
 		GetEbook g = new GetEbook(id);
 		g.execute();
 		return g.getBook();
+	}
+	
+	public void deletePrintbook(int id)
+	{
+		DeletePrintbook d = new DeletePrintbook(id);
+		d.execute();
+	}
+	
+	public void deleteEbook(int id)
+	{
+		DeleteEbook d = new DeleteEbook(id);
+		d.execute();
 	}
 }

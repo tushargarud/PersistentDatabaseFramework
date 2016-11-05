@@ -25,5 +25,15 @@ public class DBManager {
 	{
 		return dbImpl.getEbook(id);
 	}
+	
+	public void deletePrintbook(int id)
+	{
+		dbImpl.deletePrintbook(id);
+	}
+	
+	public void deleteEbook(int id)
+	{
+		dbImpl.deleteEbook(id);
+	}
 
 }
