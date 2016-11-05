@@ -1,17 +1,16 @@
 package dal;
 
+import java.util.ArrayList;
+
 import businessObjects.Book;
 
 public abstract class GetAllBooks extends MysqlImplCmd{
 	
-	public GetAllBooks()
-	{
-		
-	}
+	ArrayList<Book> bookList;
 	
-	public Book getBook()
+	public ArrayList<Book> getAllBooks()
 	{
-		return book;
+		return bookList;
 	}
 
 }

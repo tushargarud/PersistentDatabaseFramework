@@ -1,5 +1,7 @@
 package dal;
 
+import java.util.ArrayList;
+
 import businessObjects.Book;
 
 public class MysqlImpl implements DBImpl {
@@ -40,5 +42,19 @@ public class MysqlImpl implements DBImpl {
 	{
 		DeleteEbook d = new DeleteEbook(id);
 		d.execute();
+	}
+	
+	public ArrayList<Book> getAllPrintbooks()
+	{
+		GetAllPrintbooks g = new GetAllPrintbooks();
+		g.execute();
+		return g.getAllBooks();
+	}
+	
+	public ArrayList<Book> getAllEbooks()
+	{
+		GetAllEbooks g = new GetAllEbooks();
+		g.execute();
+		return g.getAllBooks();
 	}
 }

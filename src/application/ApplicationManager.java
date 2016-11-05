@@ -1,5 +1,8 @@
 package application;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import controllers.*;
 import gui.ManageBooksForm;
 import logger.ErrorLogger;
@@ -18,6 +21,8 @@ public class ApplicationManager {
 		deleteController = new DeleteController();
 		
 		ManageBooksForm manageBooksForm  = new ManageBooksForm(); 
+        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        manageBooksForm.setLocation((screenDimension.width-manageBooksForm.getWidth())/2, (screenDimension.height-manageBooksForm.getHeight())/2);
 		manageBooksForm.setVisible(true);
 	}
 	

@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import application.ApplicationManager;
 import application.Constants;
@@ -18,11 +19,14 @@ import controllers.SearchController;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -205,33 +209,45 @@ public class ManageBooksForm extends JFrame {
 			}
 		});
 		
-		btnSave.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
 				SaveController saveController = ApplicationManager.getSaveController();
 				saveController.saveBook((String)cbBookType.getSelectedItem(), txtBookId.getText(), txtBookName.getText(),txtAuthor.getText(),
 						txtPublisher.getText(),txtIsbn.getText(),txtNumberOfPages.getText(),txtField1.getText());
 			}
 		});
 
-		btnDelete.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
 				DeleteController deleteController = ApplicationManager.getDeleteController();
 				deleteController.deleteBook((String)cbBookType.getSelectedItem(), Integer.parseInt(txtBookId.getText()));
 			}
 		});
 		
-		btnSearch.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
 				SearchController searchController  = ApplicationManager.getSearchController();
 				Book book = searchController.searchBook((String)cbBookType.getSelectedItem(), Integer.parseInt(txtBookId.getText()));
 				displayBook(book);
 			}
-
 		});		
 		
+		btnShowAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				SearchController searchController  = ApplicationManager.getSearchController();
+				DefaultTableModel tableModel = searchController.getAllBooks((String)cbBookType.getSelectedItem());
+				BookRepositoryForm repository = new BookRepositoryForm(tableModel);				
+		        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		        repository.setLocation((screenDimension.width-repository.getWidth())/2, (screenDimension.height-repository.getHeight())/2);		        
+		        repository.setVisible(true);
+			}
+		});	
+		
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				clearFormFields();
+			}
+		});		
 	}
 	
 	private void clearFormFields() {

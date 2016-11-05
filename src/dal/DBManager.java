@@ -1,5 +1,7 @@
 package dal;
 
+import java.util.ArrayList;
+
 import businessObjects.Book;
 
 public class DBManager {
@@ -34,6 +36,16 @@ public class DBManager {
 	public void deleteEbook(int id)
 	{
 		dbImpl.deleteEbook(id);
+	}
+	
+	public ArrayList<Book> getAllPrintbooks()
+	{
+		return dbImpl.getAllPrintbooks();
+	}
+	
+	public ArrayList<Book> getAllEbooks()
+	{
+		return dbImpl.getAllEbooks();
 	}
 
 }
