@@ -25,7 +25,6 @@ public class MysqlImpl implements DBImpl {
 	{
 		GetPrintbook g = new GetPrintbook(id);
 		g.execute();
-		ExecutedStack.push(g);
 		return g.getBook();		
 	}
 	
@@ -33,7 +32,6 @@ public class MysqlImpl implements DBImpl {
 	{
 		GetEbook g = new GetEbook(id);
 		g.execute();
-		ExecutedStack.push(g);
 		return g.getBook();
 	}
 	
@@ -55,7 +53,6 @@ public class MysqlImpl implements DBImpl {
 	{
 		GetAllPrintbooks g = new GetAllPrintbooks();
 		g.execute();
-		ExecutedStack.push(g);
 		return g.getAllBooks();
 	}
 	
@@ -63,7 +60,6 @@ public class MysqlImpl implements DBImpl {
 	{
 		GetAllEbooks g = new GetAllEbooks();
 		g.execute();
-		ExecutedStack.push(g);
 		return g.getAllBooks();
 	}
 }
