@@ -1,6 +1,7 @@
 package dal;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import businessObjects.Book;
 import businessObjects.Ebook;
@@ -9,20 +10,48 @@ import logger.ErrorLogger;
 
 public class GetEbook extends GetBook{
 	
-	public GetEbook(int id)
+	public GetEbook(Book book)
 	{
-		super(id);
+		super(book);
 	}
 	
 	public void queryDB()
 	{
 		try
 		{
-			String qStr = "SELECT * FROM ebooks WHERE ebook_id=\"" + id + "\"";
+								
+			Ebook ebook = (Ebook)book;
+			
+			ArrayList<String> conditions = new ArrayList<String>();
+			if(ebook.getBookId() > 0)
+				conditions.add("ebook_id=" + Integer.toString(ebook.getBookId()));
+			if(ebook.getBookName() != null && !ebook.getBookName().isEmpty())
+				conditions.add("ebook_name LIKE '%"+ebook.getBookName()+"%'");
+			if(ebook.getAuthor() != null && !ebook.getAuthor().isEmpty())
+				conditions.add("author LIKE '%"+ebook.getAuthor()+"%'");
+			if(ebook.getPublisher() != null && !ebook.getPublisher().isEmpty())
+				conditions.add("publisher LIKE '%"+ebook.getPublisher()+"%'");
+			if(ebook.getIsbn() != null && !ebook.getIsbn().isEmpty())
+				conditions.add("isbn LIKE '%"+ebook.getIsbn()+"%'");
+			if(ebook.getNoOfPages() > 0)
+				conditions.add("number_of_pages=" + Integer.toString(ebook.getNoOfPages()));
+			if(ebook.getUrl() != null && !ebook.getUrl().isEmpty())
+				conditions.add("url LIKE '%"+ebook.getUrl()+"%'");
+			
+			StringBuilder condition = new StringBuilder("SELECT * FROM ebooks WHERE ");
+			for(String str : conditions)
+			{
+				if(conditions.indexOf(str)==0)
+					condition.append(str + " ");
+				else
+					condition.append(" and " + str + " ");
+			}
+			condition.append(";");
+			
 			stmt = con.createStatement();
-			resultSet = stmt.executeQuery(qStr);
+			resultSet = stmt.executeQuery(condition.toString());
 		}
-		catch(SQLException ex)
+		catch(Exception ex)
 		{
 			ErrorLogger.log(ex.getMessage());
 			resultSet = null;

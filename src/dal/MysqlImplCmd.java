@@ -19,9 +19,9 @@ public abstract class MysqlImplCmd {
 		//default constructor required for creating objects of SaveBook
 	}
 	
-	public MysqlImplCmd(int id)
+	public MysqlImplCmd(Book book)
 	{
-		this.id = id;
+		this.book = book;
 	}
 	
 	public void execute()

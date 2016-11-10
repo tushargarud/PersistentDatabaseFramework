@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import businessObjects.Book;
 
 public interface DBImpl {
-	public Book getPrintbook(int id);
-	public Book getEbook(int id);
+	public Book getPrintbook(Book book);
+	public Book getEbook(Book book);
 	public void savePrintbook(Book b);
 	public void saveEbook(Book b);
 	public void deletePrintbook(int id);

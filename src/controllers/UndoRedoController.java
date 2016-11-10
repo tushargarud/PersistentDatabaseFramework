@@ -4,7 +4,14 @@ import components.ExecutedStack;
 import components.UndoneStack;
 import dal.MysqlImplCmd;
 
-public class RedoController {
+public class UndoRedoController {
+	
+	public void undo()
+	{
+		MysqlImplCmd cmd = ExecutedStack.pop();
+		cmd.undo();
+		UndoneStack.push(cmd);
+	}
 	
 	public void redo()
 	{

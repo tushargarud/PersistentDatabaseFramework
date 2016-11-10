@@ -13,30 +13,53 @@ import dal.DBManager;
 
 public class SearchController {
 
-	public Book searchBook(String bookType, int id) {
-
-		DBManager dbMgr = new DBManager();
-
+	public ArrayList<String> searchBook(String bookType, String bookId, String bookName, String author, String publisher, String isbn, String noOfPages, String field1) 
+	{	
+		
+		DBManager dbMgr = new DBManager();	
+		Book book;
+		
 		if(bookType.equals(Constants.PRINTBOOK))
 		{
-			return dbMgr.getPrintbook(id);
+			book = new Printbook(toInteger(bookId), bookName, author, publisher, isbn, toInteger(noOfPages), toInteger(field1));
+			book = dbMgr.getPrintbook(book);
 		}
 		else
 		{
-			return dbMgr.getEbook(id);
+			book = new Ebook(toInteger(bookId), bookName, author, publisher, isbn, toInteger(noOfPages), field1);
+			book = dbMgr.getEbook(book);
 		}
-	}
 
+		ArrayList<String> result = new ArrayList<String>();
+
+		if(book!=null)
+		{
+			result.add(Integer.toString(book.getBookId()));
+			result.add(book.getBookName());
+			result.add(book.getAuthor());
+			result.add(book.getPublisher());
+			result.add(book.getIsbn());
+			result.add(Integer.toString(book.getNoOfPages()));
+			if(bookType.equals(Constants.PRINTBOOK))
+				result.add(Integer.toString(((Printbook)book).getNoOfCopies()));
+			else
+				result.add(((Ebook)book).getUrl());
+		}
+		
+		return result;
+	}	
+
+	
 	public DefaultTableModel getAllBooks(String bookType)
 	{
 		DBManager dbMgr = new DBManager();
 		DefaultTableModel model = new DefaultTableModel();
 		ArrayList<Book> bookList;		
-		
+
 		if(bookType.equals(Constants.PRINTBOOK))
 		{
 			bookList = dbMgr.getAllPrintbooks();
-			
+
 			model.addColumn("Printbook Id");
 			model.addColumn("Printbook Name");
 			model.addColumn("Author");
@@ -44,7 +67,7 @@ public class SearchController {
 			model.addColumn("ISBN");
 			model.addColumn("Number of Pages");
 			model.addColumn("Number of Copies");
-			
+
 			for (Book book : bookList) 
 			{
 				Vector<String> vect = new Vector<String>();
@@ -57,12 +80,12 @@ public class SearchController {
 				vect.add(String.valueOf(((Printbook)book).getNoOfCopies()));
 				model.addRow(vect);
 			}
-			
+
 		}
 		else
 		{
 			bookList = dbMgr.getAllEbooks();
-			
+
 			model.addColumn("Ebook Id");
 			model.addColumn("Ebook Name");
 			model.addColumn("Author");
@@ -70,7 +93,7 @@ public class SearchController {
 			model.addColumn("ISBN");
 			model.addColumn("Number of Pages");
 			model.addColumn("Url");
-			
+
 			for (Book book : bookList) 
 			{
 				Vector<String> vect = new Vector<String>();
@@ -84,7 +107,25 @@ public class SearchController {
 				model.addRow(vect);
 			}
 		}
-		
+
 		return model;
 	}
+
+	private int toInteger(String str)
+	{
+		if(str==null)
+			return -1;
+		else if(str.isEmpty())
+			return -1;
+		
+		try
+		{
+			return Integer.parseInt(str);
+		}
+		catch(Exception NumberFormatException)
+		{
+			return -1;
+		}
+	}
+
 }

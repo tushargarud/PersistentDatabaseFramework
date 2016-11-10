@@ -8,24 +8,24 @@ public class DBManager {
 	
 	DBImpl dbImpl = new MysqlImpl();
 	
-	public void savePrintbook(Book b)
+	public void savePrintbook(Book book)
 	{
-		dbImpl.savePrintbook(b);
+		dbImpl.savePrintbook(book);
 	}
 	
-	public void saveEbook(Book b)
+	public void saveEbook(Book book)
 	{
-		dbImpl.saveEbook(b);
+		dbImpl.saveEbook(book);
 	}
 		
-	public Book getPrintbook(int id)
+	public Book getPrintbook(Book book)
 	{
-		return dbImpl.getPrintbook(id);
+		return dbImpl.getPrintbook(book);
 	}
 	
-	public Book getEbook(int id)
+	public Book getEbook(Book book)
 	{
-		return dbImpl.getEbook(id);
+		return dbImpl.getEbook(book);
 	}
 	
 	public void deletePrintbook(int id)

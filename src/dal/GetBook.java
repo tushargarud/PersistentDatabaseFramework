@@ -4,9 +4,9 @@ import businessObjects.Book;
 
 public abstract class GetBook extends MysqlImplCmd{
 	
-	public GetBook(int id)
+	public GetBook(Book book)
 	{
-		super(id);
+		super(book);
 	}
 	
 	public Book getBook()

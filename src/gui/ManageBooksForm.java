@@ -1,23 +1,18 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import application.ApplicationManager;
 import application.Constants;
-import businessObjects.Book;
-import businessObjects.Ebook;
-import businessObjects.Printbook;
+import components.ExecutedStack;
+import components.UndoneStack;
 import controllers.DeleteController;
-import controllers.RedoController;
 import controllers.SaveController;
 import controllers.SearchController;
-import controllers.UndoController;
+import controllers.UndoRedoController;
+import logger.ErrorLogger;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,9 +27,8 @@ import javax.swing.JComboBox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ManageBooksForm extends JFrame {
 
@@ -47,6 +41,11 @@ public class ManageBooksForm extends JFrame {
 	private JTextField txtIsbn;
 	private JTextField txtNumberOfPages;
 	private JTextField txtField1;
+	
+	private SaveController saveController;
+	private SearchController searchController;
+	private DeleteController deleteController;
+	private UndoRedoController undoRedoController;
 
 	/**
 	 * Create the frame.
@@ -196,6 +195,15 @@ public class ManageBooksForm extends JFrame {
 		btnShowAll.setFont(new Font("Calibri", Font.PLAIN, 24));
 		btnShowAll.setBounds(299, 788, 294, 39);
 		contentPane.add(btnShowAll);
+		
+		ErrorLogger.initialize();		
+		ExecutedStack.initialize();
+		UndoneStack.initialize();
+		
+		saveController = new SaveController();
+		searchController = new SearchController();
+		deleteController = new DeleteController();
+		undoRedoController = new UndoRedoController();
 
 		for(String bookType : Constants.BOOKTYPES)
 			cbBookType.addItem(bookType);
@@ -217,7 +225,6 @@ public class ManageBooksForm extends JFrame {
 			public void actionPerformed(ActionEvent arg) {
 				if(validateForm())
 				{
-					SaveController saveController = ApplicationManager.getSaveController();
 					saveController.saveBook((String)cbBookType.getSelectedItem(), txtBookId.getText(), txtBookName.getText(),txtAuthor.getText(),
 							txtPublisher.getText(),txtIsbn.getText(),txtNumberOfPages.getText(),txtField1.getText());
 				}
@@ -228,27 +235,38 @@ public class ManageBooksForm extends JFrame {
 			public void actionPerformed(ActionEvent arg) {
 				if(validateBookId())
 				{
-					DeleteController deleteController = ApplicationManager.getDeleteController();
 					deleteController.deleteBook((String)cbBookType.getSelectedItem(), Integer.parseInt(txtBookId.getText()));
 					clearFormFields();
 				}
 			}
 		});
-
+ 
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				if(validateBookId())
-				{
-					SearchController searchController  = ApplicationManager.getSearchController();
-					Book book = searchController.searchBook((String)cbBookType.getSelectedItem(), Integer.parseInt(txtBookId.getText()));
-					displayBook(book);
-				}
+				//	ArrayList<String> strArr = searchController.searchBook((String)cbBookType.getSelectedItem(), Integer.parseInt(txtBookId.getText()));
+					
+					ArrayList<String> strArr = searchController.searchBook((String)cbBookType.getSelectedItem(), txtBookId.getText(), txtBookName.getText(),txtAuthor.getText(),
+							txtPublisher.getText(),txtIsbn.getText(),txtNumberOfPages.getText(),txtField1.getText());					
+					
+					if(strArr.size()!=0)
+					{
+						txtBookId.setText(strArr.get(0)); 
+						txtBookName.setText(strArr.get(1));
+						txtAuthor.setText(strArr.get(2));
+						txtPublisher.setText(strArr.get(3));
+						txtIsbn.setText(strArr.get(4));
+						txtNumberOfPages.setText(strArr.get(5));
+						txtField1.setText(strArr.get(6));
+					}
+					else
+					{
+						clearFormFields();
+					}					
 			}
 		});		
 
 		btnShowAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				SearchController searchController  = ApplicationManager.getSearchController();
 				DefaultTableModel tableModel = searchController.getAllBooks((String)cbBookType.getSelectedItem());
 				BookRepositoryForm repository = new BookRepositoryForm(tableModel);				
 				Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -265,20 +283,26 @@ public class ManageBooksForm extends JFrame {
 
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				UndoController undoController  = ApplicationManager.getUndoController();
-				undoController.undo();
+				undoRedoController.undo();
 			}
 		});	
 
 		btnRedo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				RedoController redoController  = ApplicationManager.getRedoController();
-				redoController.redo();
+				undoRedoController.redo();
 			}
 		});	
 
 	}
 
+	public static void main(String[] args)
+	{
+		ManageBooksForm manageBooksForm  = new ManageBooksForm(); 
+        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        manageBooksForm.setLocation((screenDimension.width-manageBooksForm.getWidth())/2, (screenDimension.height-manageBooksForm.getHeight())/2);
+		manageBooksForm.setVisible(true);		
+	}
+	
 	private void clearFormFields() {
 
 		txtBookId.setText("");
@@ -288,36 +312,6 @@ public class ManageBooksForm extends JFrame {
 		txtIsbn.setText("");
 		txtNumberOfPages.setText("");
 		txtField1.setText("");
-
-	}
-
-	private void displayBook(Book book) {
-
-		if(book != null)
-		{
-			txtBookId.setText(String.valueOf(book.getBookId()));
-			txtBookName.setText(book.getBookName());
-			txtAuthor.setText(book.getAuthor());
-			txtPublisher.setText(book.getPublisher());
-			txtIsbn.setText(book.getIsbn());
-			txtNumberOfPages.setText(String.valueOf(book.getNoOfPages()));			
-
-			if(book instanceof Printbook)
-			{
-				cbBookType.setSelectedItem(Constants.PRINTBOOK);
-				txtField1.setText(String.valueOf(((Printbook)book).getNoOfCopies()));
-			}
-			else
-			{
-				cbBookType.setSelectedItem(Constants.EBOOK);
-				txtField1.setText(((Ebook)book).getUrl());
-			}
-
-		}
-		else
-		{
-			clearFormFields();
-		}
 
 	}
 

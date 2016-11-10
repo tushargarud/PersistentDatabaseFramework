@@ -7,30 +7,30 @@ import components.ExecutedStack;
 
 public class MysqlImpl implements DBImpl {
 	
-	public void savePrintbook(Book b)
+	public void savePrintbook(Book book)
 	{
-		SavePrintbook s = new SavePrintbook(b);
+		SavePrintbook s = new SavePrintbook(book);
 		s.execute();
 		ExecutedStack.push(s);
 	}
 	
-	public void saveEbook(Book b)
+	public void saveEbook(Book book)
 	{
-		SaveEbook s = new SaveEbook(b);
+		SaveEbook s = new SaveEbook(book);
 		s.execute();
 		ExecutedStack.push(s);
 	}
 	
-	public Book getPrintbook(int id)
+	public Book getPrintbook(Book book)
 	{
-		GetPrintbook g = new GetPrintbook(id);
+		GetPrintbook g = new GetPrintbook(book);
 		g.execute();
 		return g.getBook();		
 	}
 	
-	public Book getEbook(int id)
+	public Book getEbook(Book book)
 	{
-		GetEbook g = new GetEbook(id);
+		GetEbook g = new GetEbook(book);
 		g.execute();
 		return g.getBook();
 	}
